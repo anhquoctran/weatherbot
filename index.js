@@ -19,7 +19,7 @@ var server = restify.createServer();
 
 server.listen(process.env.port || process.env.PORT || 3978, () => {
     console.log("%s listening to %s", server.name, server.url);
-    console.log(__dirname + "\\translate_api\\mscore-sync-auth-6d9c97c0a521.json");
+    //console.log(__dirname + "\\translate_api\\mscore-sync-auth-6d9c97c0a521.json");
 });
 
 var recognizer = new apiairecognizer("fad774e3771b4aafad518f320b58590b");
@@ -27,7 +27,6 @@ var recognizer = new apiairecognizer("fad774e3771b4aafad518f320b58590b");
 var intents = new builder.IntentDialog({
     recognizers: [recognizer]
 });
-
 
 
 function doTranslation(someword, callback) {
@@ -52,7 +51,7 @@ function getImageStreamFromMessage(message) {
     var attachment = message.attachments[0];
     if (checkRequiresToken(message)) {
         connector.getTokenAccessToken((err, token) => {
-            var tok = token;
+            //var tok = token;
             headers['Authorization'] = 'Bearer ' + token;
             headers['Content-Type'] = 'application/octet-stream';
 
@@ -66,7 +65,9 @@ function getImageStreamFromMessage(message) {
 
 function handleSuccessResponse(session, caption) {
     if (caption) {
-        session.send('Tôi nghĩ rằng bức ảnh này có chứa' + caption);
+        doTranslation(caption, (result) => {
+            session.send('Tôi nghĩ rằng bức ảnh này có chứa ' + result);
+        });
     } else {
         session.send('Không thể tìm thấy mô tả cho bức ảnh này! Hãy thử với một bức ảnh khác');
     }
@@ -207,9 +208,11 @@ var bot = new builder.UniversalBot(connector, (session) => {
                 .getCationFromURL(imgUrl)
                 .then((caption) => { handleSuccessResponse(session, caption) })
                 .catch((error) => { handleErrorResponse(session, error); });
+        } else {
+            intents(session);
         }
     }
 });
 
 server.post('/api/messages', connector.listen());
-bot.dialog('/', intents);
+//bot.dialog('/', intents);

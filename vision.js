@@ -1,5 +1,5 @@
 var request = require('request').defaults({ encoding: null });
-const API_KEY = "";
+const API_KEY = "7d4420b4ce204e679b2111d41e70773e";
 var VISION_URL = 'https://api.projectoxford.ai/vision/v1.0/analyze/?visualFeatures=Description&form=BCSIMG&subscription-key=' + API_KEY;
 
 exports.getCationFromStream = (stream) => {

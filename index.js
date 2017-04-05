@@ -64,6 +64,14 @@ function getImageStreamFromMessage(message) {
     return needle.get(attachment.contentUrl, { headers: headers });
 }
 
+function handleSuccessResponse(session, caption) {
+    if (caption) {
+        session.send('Tôi nghĩ rằng bức ảnh này có chứa' + caption);
+    } else {
+        session.send('Không thể tìm thấy mô tả cho bức ảnh này! Hãy thử với một bức ảnh khác');
+    }
+}
+
 function handleErrorResponse(session, error) {
     session.send('Oops! Something went wrong. Try again later.');
     console.error(error);
@@ -188,7 +196,18 @@ intents.matches("botname", (session, args) => {
 var bot = new builder.UniversalBot(connector, (session) => {
     if (hasImageAttachment(session)) {
         var stream = getImageStreamFromMessage(session.message);
-
+        vision
+            .getCationFromStream(stream)
+            .then((caption) => { handleSuccessResponse(session, caption); })
+            .catch((error) => { handleErrorResponse(session, error); });
+    } else {
+        var imgUrl = parseAnchorTag(session.message.text) || (validUrl.isUri(session.message.text) ? session.message.text : null);
+        if (imgUrl) {
+            vision
+                .getCationFromURL(imgUrl)
+                .then((caption) => { handleSuccessResponse(session, caption) })
+                .catch((error) => { handleErrorResponse(session, error); });
+        }
     }
 });
 

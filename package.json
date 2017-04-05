@@ -1,0 +1,22 @@
+{
+  "name": "botdemo",
+  "version": "1.0.0",
+  "description": "Only for demo",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": [
+    "demo"
+  ],
+  "author": "Anh Quoc Tran",
+  "license": "GPL-3.0",
+  "dependencies": {
+    "@google-cloud/translate": "^0.8.0",
+    "api-ai-recognizer": "^1.0.2",
+    "i18n": "^0.8.3",
+    "recastai": "^3.1.1",
+    "request": "^2.81.0",
+    "restify": "^4.3.0"
+  }
+}

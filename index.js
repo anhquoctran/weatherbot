@@ -194,7 +194,9 @@ intents.matches("botname", (session, args) => {
     }
 });
 
-var bot = new builder.UniversalBot(connector, (session) => {
+var bot = new builder.UniversalBot(connector, handleData);
+
+function handleData(session) {
     if (hasImageAttachment(session)) {
         var stream = getImageStreamFromMessage(session.message);
         vision
@@ -209,10 +211,12 @@ var bot = new builder.UniversalBot(connector, (session) => {
                 .then((caption) => { handleSuccessResponse(session, caption) })
                 .catch((error) => { handleErrorResponse(session, error); });
         } else {
-            intents(session);
+            doTranslation("Did you upload an image? I'm more of a visual person. Try sending me an image or an image URL", (result) => {
+                session.send(result);
+            });
         }
     }
-});
+}
 
 server.post('/api/messages', connector.listen());
 //bot.dialog('/', intents);

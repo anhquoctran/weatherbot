@@ -194,7 +194,7 @@ intents.matches("botname", (session, args) => {
     }
 });
 
-var bot = new builder.UniversalBot(connector, handleData);
+var bot = new builder.UniversalBot(connector);
 
 function handleData(session) {
     if (hasImageAttachment(session)) {
@@ -219,4 +219,4 @@ function handleData(session) {
 }
 
 server.post('/api/messages', connector.listen());
-//bot.dialog('/', intents);
+bot.dialog('/', intents);
